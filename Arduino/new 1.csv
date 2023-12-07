@@ -1,0 +1,62 @@
+
+#include <Arduino.h>
+#include <SoftwareSerial.h>
+
+// Replace with your SIM800L's RX and TX pins
+SoftwareSerial sim800lSerial(7, 3);  //Tx Rx
+void updateSerial()
+{
+  delay(500);
+  while (Serial.available()) 
+  {
+    sim800lSerial.write(Serial.read());//Forward what Serial received to Software Serial Port
+  }
+  while(sim800lSerial.available()) 
+  {
+    Serial.write(sim800lSerial.read());//Forward what Software Serial received to Serial Port
+  }
+}
+void sendATCommand(String command) {
+  sim800lSerial.println(command);
+  Serial.println(command);
+  delay(1000);
+  while (sim800lSerial.available()) {
+    Serial.write(sim800lSerial.read());
+  }
+  Serial.println();
+}
+
+void sendSMS(String phoneNumber, String message) {
+  sendATCommand("AT+CMGF=1");  // Set SMS text mode
+  sendATCommand("AT+CMGS=\"" + phoneNumber + "\"");// Start SMS sending mode 
+  sendATCommand("test");  // Send SMS content
+  sim800lSerial.write(26);  // Ctrl+Z to send SMS
+  delay(5000);  // Wait for SMS to be sent
+}
+void send(){
+       sim800lSerial.println("AT+CMGF=1"); // Configuring TEXT mode
+  updateSerial();
+ sim800lSerial.println("AT+CMGS=\"+94779916883\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+  updateSerial();
+  sim800lSerial.print("Hello"); //text content
+  updateSerial();
+  sim800lSerial.write(26);
+}
+
+void setup() {
+  Serial.begin(9600);
+  sim800lSerial.begin(9600);
+
+  delay(1000);
+  sendATCommand("AT");  // Initialize communication with the SIM800L module
+  Serial.println("Code is Here");
+ // send();
+   sendSMS("+94779916883","Test 1");
+}
+
+void loop() {
+ 
+  delay(5000);  // Wait before sending another SMS
+}
+
+
