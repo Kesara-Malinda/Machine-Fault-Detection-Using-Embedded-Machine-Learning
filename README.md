@@ -14,6 +14,8 @@ The states mentioned here are:-
                                                   Shaft Misalignment 
                                                   Wear of bearings
 
+Upon completion of the project the device can identify whether there is a fault or not and even it will be able to classify the proper fault scenario.
+
 To recreate vibration waveforms by EdgeImpulse Raw accelerometer data for 3 Axis is collected by simulating each condition.
 
 Data collection is done by the MPU6050 3 - Axis Accelerometer sensor interfaced with Microcontroller. Then send the data over to computer via USB. In the computer, a python program will be listening to USB serial data processed and save the data into the CSV file.                        
